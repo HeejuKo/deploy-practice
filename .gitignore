@@ -35,3 +35,21 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### macOS
+.DS_Store
+
+### Logs
+logs/
+*.log
+
+### Docker
+_vol/
+letsencrypt/
+certbot/www/
+
+### Env / Secrets
+.env
+*.env
+application-*.yml
+application-*.properties

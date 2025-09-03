@@ -1,0 +1,32 @@
+services:
+  app:               # 도커 이미지 빌드 후 추가
+    image: projectname-app:local
+    container_name: projectname-app-dev
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    depends_on:
+      - projectname-mysql
+    restart: unless-stopped
+
+  projectname-mysql:                # 팀/프로젝트 이름을 접두사로 붙여 팀원이 여러 도커 띄워도 충돌이 안 나도록!
+                                    # compose 네트워크 안에서 쓰이는 이름(= DNS 호스트 이름)
+                                    # 컨테이너끼리 통신할 때 주소 역할을 함
+    image: mysql:8.0.43
+    container_name: projectname-mysql-dev  # 프로젝트-서비스-환경 -> 협업 시 직관적임
+    environment:
+      MYSQL_ROOT_PASSWORD: projectname_root
+      MYSQL_DATABASE: projectname_db
+      MYSQL_USER: teamname
+      MYSQL_PASSWORD: projectname_pw
+      TZ: Asia/Seoul
+    command: [
+      "--default-authentication-plugin=caching_sha2_password",
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci"
+    ]
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./_vol/mysql:/var/lib/mysql
